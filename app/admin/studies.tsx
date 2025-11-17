@@ -103,7 +103,8 @@ export default function AdminStudies() {
         Alert.alert('Archivo muy grande', 'Máximo 20MB');
         return;
       }
-      const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
+      const fileObj = new FileSystem.File(uri);
+      const base64 = fileObj.base64();
       const mt = mimeType || guessMimeTypeByName(name);
       const emailRaw = forEmail.trim();
       const email = emailRaw ? (isValidEmail(emailRaw) ? emailRaw : undefined) : undefined;
