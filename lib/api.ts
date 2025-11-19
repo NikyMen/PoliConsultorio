@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://creando-lazos-api.onrender.com';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://apicreandolazos.vercel.app/';
 
 export const api = axios.create({
   baseURL: API_URL,

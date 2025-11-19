@@ -104,7 +104,7 @@ export default function AdminStudies() {
         return;
       }
       const fileObj = new FileSystem.File(uri);
-      const base64 = fileObj.base64();
+      const base64 = await fileObj.base64();
       const mt = mimeType || guessMimeTypeByName(name);
       const emailRaw = forEmail.trim();
       const email = emailRaw ? (isValidEmail(emailRaw) ? emailRaw : undefined) : undefined;

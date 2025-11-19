@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "creandolazos",
     "name": "CreandoLazos",
     "slug": "CreandoLazos",
     "version": "1.0.0",
@@ -32,6 +33,10 @@
         "projectId": "6675065c-c34e-4151-b998-ee9b96640d41"
       }
     },
-    "owner": "smallkeloft"
+    "owner": "smallkeloft",
+    "plugins": [
+      "expo-system-ui",
+      "expo-router"
+    ]
   }
 }
