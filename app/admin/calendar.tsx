@@ -128,7 +128,7 @@ export default function AdminCalendar() {
         <TextInput value={title} onChangeText={setTitle} placeholder="Título del evento"
           style={{ borderWidth: 1, borderColor: colors.border, padding: spacing.sm, borderRadius: radius.sm, backgroundColor: '#fff' }} />
         <Text style={{ marginTop: spacing.sm, marginBottom: 4 }}>Notas</Text>
-        <TextInput value={notes} onChangeText={setNotes} placeholder="Notas opcionales" multiline
+        <TextInput value={notes} onChangeText={setNotes} placeholder="Notas opcionales" multiline={true}
           style={{ borderWidth: 1, borderColor: colors.border, padding: spacing.sm, borderRadius: radius.sm, backgroundColor: '#fff', minHeight: 60 }} />
         <Text style={{ marginTop: spacing.sm, marginBottom: 4 }}>Paciente (email opcional)</Text>
         <TextInput value={forEmail} onChangeText={setForEmail} placeholder="usuario@dominio"

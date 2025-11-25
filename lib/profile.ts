@@ -1,4 +1,5 @@
 import { getItem, saveItem } from './storage';
+import { api } from './api';
 
 export type ProfileData = {
   nombreApellido?: string;
@@ -44,4 +45,24 @@ export async function setProfileFor(email: string, data: ProfileData) {
   const store = await getStore();
   store.perEmail[email] = { ...emptyProfile(email), ...data, correo: data.correo || email };
   await saveStore(store);
+}
+
+export async function updateRemoteProfile(email: string, data: ProfileData) {
+  const payload = { email, ...data };
+  await api.put('/profiles', payload);
+}
+
+export async function getRemoteProfile(email: string): Promise<ProfileData | null> {
+  const res = await api.get('/profiles', { params: { email } });
+  const data = res?.data;
+  if (!data) return null;
+  const mapped: ProfileData = {
+    nombreApellido: data.nombreApellido ?? data.nombre_apellido ?? '',
+    cuilDni: data.cuilDni ?? data.cuil_dni ?? '',
+    obraSocial: data.obraSocial ?? data.obra_social ?? '',
+    correo: data.correo ?? email,
+    escuela: data.escuela ?? '',
+    diagnostico: data.diagnostico ?? '',
+  };
+  return mapped;
 }

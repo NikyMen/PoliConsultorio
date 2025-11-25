@@ -49,7 +49,7 @@ export default function AdminUsuarios() {
         placeholder="********"
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
+        secureTextEntry={true}
         style={{ borderWidth: 1, borderColor: colors.border, borderRadius: radius.sm, padding: 10, backgroundColor: '#fff', marginBottom: spacing.sm }}
       />
       <Text style={{ marginBottom: 4 }}>Rol</Text>

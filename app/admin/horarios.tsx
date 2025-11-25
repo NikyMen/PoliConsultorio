@@ -65,7 +65,7 @@ export default function AdminHorarios() {
         value={note}
         onChangeText={setNote}
         onBlur={onBlurNote}
-        multiline
+        multiline={true}
         mode="outlined"
         style={{ marginBottom: spacing.md, minHeight: 80 }}
       />
@@ -79,7 +79,7 @@ export default function AdminHorarios() {
           }
         }}>Guardar</PaperButton>
       </View>
-      <ScrollView horizontal style={{ flex: 1 }}>
+      <ScrollView horizontal={true} style={{ flex: 1 }}>
         <View style={{ minWidth: 900 }}>
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: 100, padding: 10, backgroundColor: colors.secondary }}>

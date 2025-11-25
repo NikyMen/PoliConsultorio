@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://apicreandolazos.vercel.app/';
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
+if (!API_URL) {
+  throw new Error('EXPO_PUBLIC_API_URL no definido');
+}
 
 export const api = axios.create({
   baseURL: API_URL,

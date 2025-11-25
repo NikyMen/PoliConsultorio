@@ -4,7 +4,7 @@ import { TextInput as PaperTextInput, Button as PaperButton } from 'react-native
 import { Redirect } from 'expo-router';
 import { useAuth } from '../../lib/auth';
 import { colors, spacing, radius } from '../../lib/theme';
-import { getProfileFor, setProfileFor, type ProfileData } from '../../lib/profile';
+import { getProfileFor, setProfileFor, updateRemoteProfile, getRemoteProfile, type ProfileData } from '../../lib/profile';
 import { api } from '../../lib/api';
 
 export default function AdminProfile() {
@@ -13,25 +13,47 @@ export default function AdminProfile() {
   const [profile, setProfile] = useState<ProfileData>({});
   const [newPatientEmail, setNewPatientEmail] = useState('');
   const [newPatientPassword, setNewPatientPassword] = useState('');
+  const [canEdit, setCanEdit] = useState(false);
 
   useEffect(() => {
     setProfile({});
+    setCanEdit(false);
   }, []);
 
   if (!isAuthenticated) return <Redirect href="/login" />;
   if (role !== 'ADMIN') return <Redirect href="/patient/home" />;
 
   const loadProfile = async () => {
-    const p = await getProfileFor(email.trim());
-    setProfile(p);
+    const em = email.trim();
+    if (!em) {
+      Alert.alert('Correo requerido', 'Ingresa un correo para buscar');
+      setCanEdit(false);
+      return;
+    }
+    try {
+      const remote = await getRemoteProfile(em);
+      if (remote) {
+        setProfile(remote);
+        setCanEdit(true);
+        return;
+      }
+      Alert.alert('Error', 'Perfil no encontrado en servidor');
+      setCanEdit(false);
+      return;
+    } catch (e: any) {
+      Alert.alert('Error', e?.message || 'No se pudo obtener perfil remoto');
+      setCanEdit(false);
+      return;
+    }
   };
 
   const saveProfile = async () => {
     try {
       const targetEmail = email.trim() || profile.correo || '';
       if (!targetEmail) throw new Error('Correo requerido');
+      await updateRemoteProfile(targetEmail, profile);
       await setProfileFor(targetEmail, profile);
-      Alert.alert('Guardado', 'Perfil actualizado');
+      Alert.alert('Actualizado', 'Paciente actualizado en servidor y guardado local');
     } catch (e: any) {
       Alert.alert('Error', e?.message || 'No se pudo guardar');
     }
@@ -54,7 +76,7 @@ export default function AdminProfile() {
 
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: spacing.md }}>
-      <Text style={{ fontSize: 22, color: colors.secondary, marginBottom: spacing.sm }}>Perfil</Text>
+      <Text style={{ fontSize: 22, color: colors.secondary, marginBottom: spacing.sm }}>Buscar Perfil</Text>
       <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', marginBottom: spacing.md }}>
         <PaperTextInput
           placeholder="usuario@dominio"
@@ -65,52 +87,56 @@ export default function AdminProfile() {
         />
         <PaperButton mode="contained" icon="account-search" onPress={loadProfile}>Ver perfil</PaperButton>
       </View>
-      <Text>Nombre y apellido</Text>
-      <PaperTextInput
-        value={profile.nombreApellido || ''}
-        onChangeText={(v) => setProfile((p) => ({ ...p, nombreApellido: v }))}
-        mode="outlined"
-        style={{ marginBottom: spacing.sm }}
-      />
-      <Text>CUIL/DNI</Text>
-      <PaperTextInput
-        value={profile.cuilDni || ''}
-        onChangeText={(v) => setProfile((p) => ({ ...p, cuilDni: v }))}
-        mode="outlined"
-        style={{ marginBottom: spacing.sm }}
-      />
-      <Text>Obra social</Text>
-      <PaperTextInput
-        value={profile.obraSocial || ''}
-        onChangeText={(v) => setProfile((p) => ({ ...p, obraSocial: v }))}
-        mode="outlined"
-        style={{ marginBottom: spacing.sm }}
-      />
-      <Text>Correo</Text>
-      <PaperTextInput
-        value={profile.correo || ''}
-        onChangeText={(v) => setProfile((p) => ({ ...p, correo: v }))}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        mode="outlined"
-        style={{ marginBottom: spacing.sm }}
-      />
-      <Text>Escuela</Text>
-      <PaperTextInput
-        value={profile.escuela || ''}
-        onChangeText={(v) => setProfile((p) => ({ ...p, escuela: v }))}
-        mode="outlined"
-        style={{ marginBottom: spacing.sm }}
-      />
-      <Text>Diagnóstico</Text>
-      <PaperTextInput
-        value={profile.diagnostico || ''}
-        onChangeText={(v) => setProfile((p) => ({ ...p, diagnostico: v }))}
-        multiline
-        mode="outlined"
-        style={{ minHeight: 80, marginBottom: spacing.md }}
-      />
-      <PaperButton mode="contained" icon="content-save" onPress={saveProfile}>Guardar</PaperButton>
+      {canEdit ? (
+        <>
+          <Text>Nombre y apellido</Text>
+          <PaperTextInput
+            value={profile.nombreApellido || ''}
+            onChangeText={(v) => setProfile((p) => ({ ...p, nombreApellido: v }))}
+            mode="outlined"
+            style={{ marginBottom: spacing.sm }}
+          />
+          <Text>CUIL/DNI</Text>
+          <PaperTextInput
+            value={profile.cuilDni || ''}
+            onChangeText={(v) => setProfile((p) => ({ ...p, cuilDni: v }))}
+            mode="outlined"
+            style={{ marginBottom: spacing.sm }}
+          />
+          <Text>Obra social</Text>
+          <PaperTextInput
+            value={profile.obraSocial || ''}
+            onChangeText={(v) => setProfile((p) => ({ ...p, obraSocial: v }))}
+            mode="outlined"
+            style={{ marginBottom: spacing.sm }}
+          />
+          <Text>Correo</Text>
+          <PaperTextInput
+            value={profile.correo || ''}
+            onChangeText={(v) => setProfile((p) => ({ ...p, correo: v }))}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            mode="outlined"
+            style={{ marginBottom: spacing.sm }}
+          />
+          <Text>Escuela</Text>
+          <PaperTextInput
+            value={profile.escuela || ''}
+            onChangeText={(v) => setProfile((p) => ({ ...p, escuela: v }))}
+            mode="outlined"
+            style={{ marginBottom: spacing.sm }}
+          />
+          <Text>Diagnóstico</Text>
+          <PaperTextInput
+            value={profile.diagnostico || ''}
+            onChangeText={(v) => setProfile((p) => ({ ...p, diagnostico: v }))}
+            multiline={true}
+            mode="outlined"
+            style={{ minHeight: 80, marginBottom: spacing.md }}
+          />
+          <PaperButton mode="contained" icon="content-save" onPress={saveProfile}>Actualizar paciente</PaperButton>
+        </>
+      ) : null}
 
       <View style={{ height: spacing.lg }} />
       <Text style={{ fontSize: 18, marginBottom: spacing.sm }}>Crear nuevo paciente</Text>
@@ -129,7 +155,7 @@ export default function AdminProfile() {
         placeholder="********"
         value={newPatientPassword}
         onChangeText={setNewPatientPassword}
-        secureTextEntry
+        secureTextEntry={true}
         mode="outlined"
         style={{ marginBottom: spacing.sm }}
       />
