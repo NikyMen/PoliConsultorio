@@ -35,7 +35,7 @@ export default function LoginScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', padding: spacing.md }}>
       <Image source={require('../assets/icon.png')} style={{ width: 120, height: 120, marginBottom: spacing.md }} />
-      <Text style={{ fontSize: 26, marginBottom: spacing.sm, color: colors.secondary }}>Creando Lazos</Text>
+      <Text style={{ fontSize: 26, marginBottom: spacing.sm, color: colors.secondary }}>PoliConsultorio</Text>
       <PaperTextInput
         placeholder="Email"
         autoCapitalize="none"
