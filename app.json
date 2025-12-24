@@ -1,8 +1,8 @@
 {
   "expo": {
-    "scheme": "creandolazos",
-    "name": "CreandoLazos",
-    "slug": "CreandoLazos",
+    "scheme": "policonsultorio",
+    "name": "policonsultorio",
+    "slug": "policonsultorio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,7 +14,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smallkeloft.policonsultorio",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,14 +27,14 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.smallkeloft.CreandoLazos"
+      "package": "com.smallkeloft.policonsultorio"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "6675065c-c34e-4151-b998-ee9b96640d41"
+        "projectId": "72793874-9338-499a-82eb-da432bb3019a"
       }
     },
     "owner": "smallkeloft",
